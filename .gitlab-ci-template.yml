@@ -1,0 +1,38 @@
+# SPDX-FileCopyrightText: OpenTalk GmbH <mail@opentalk.eu>
+#
+# SPDX-License-Identifier: EUPL-1.2
+
+.default_common_job_template: &default_common_job_template
+  stage: lint
+  image:
+    name: registry.heinlein.group/opentalk-tools/common-lint:dev
+    pull_policy: if-not-present
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+
+lint:shellcheck:
+  <<: *default_common_job_template
+  script: git ls-files "*.sh" -z | xargs -0r shellcheck
+
+lint:yaml:
+  <<: *default_common_job_template
+  script: yamllint .
+
+lint:toml:
+  <<: *default_common_job_template
+  script: taplo fmt --check
+
+lint:markdown:
+  <<: *default_common_job_template
+  script:
+    - markdownlint-cli2 --warnings "**/*.md"
+
+lint:licensing:
+  <<: *default_common_job_template
+  script:
+    - reuse lint
+
+lint:commit:
+  <<: *default_common_job_template
+  script:
+    - commitlint --from $CI_MERGE_REQUEST_DIFF_BASE_SHA --to HEAD --verbose
