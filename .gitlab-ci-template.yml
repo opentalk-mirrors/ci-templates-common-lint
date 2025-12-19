@@ -25,7 +25,7 @@ lint:toml:
 lint:markdown:
   <<: *default_common_job_template
   script:
-    - markdownlint-cli2 --warnings "**/*.md"
+    - npx markdownlint-cli2 --warnings "**/*.md"
 
 lint:licensing:
   <<: *default_common_job_template
@@ -35,4 +35,4 @@ lint:licensing:
 lint:commit:
   <<: *default_common_job_template
   script:
-    - commitlint --from $CI_MERGE_REQUEST_DIFF_BASE_SHA --to HEAD --verbose
+    - npx commitlint --from $CI_MERGE_REQUEST_DIFF_BASE_SHA --to HEAD --verbose
