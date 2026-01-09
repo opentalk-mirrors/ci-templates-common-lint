@@ -1,0 +1,51 @@
+# SPDX-FileCopyrightText: OpenTalk GmbH <mail@opentalk.eu>
+#
+# SPDX-License-Identifier: EUPL-1.2
+
+---
+
+image:
+  name: git.opentalk.dev:5050/opentalk/opentalk-devops/containers/kaniko:debug-1.25.2
+  entrypoint: ['']
+  pull_policy: if-not-present
+
+stages:
+  - lint
+  - build
+  - push
+
+build:
+  rules:
+    - if: $CI_COMMIT_TAG != null
+  stage: build
+
+  script:
+    - mkdir -p /kaniko/.docker
+    - >
+      echo
+      "{\"auths\":{\"$CI_REGISTRY\":{\"auth\":\"$(echo -n ${CI_REGISTRY_USER}:${CI_REGISTRY_PASSWORD} | base64)\"}}}" >
+      /kaniko/.docker/config.json
+    - >
+      /kaniko/executor
+      --registry-mirror=mirror.gcr.io
+      --context $CI_PROJECT_DIR
+      --dockerfile $CI_PROJECT_DIR/Dockerfile
+      --destination $CI_REGISTRY_IMAGE:$CI_COMMIT_TAG
+      --destination $CI_REGISTRY_IMAGE:latest
+      --force
+
+push-and-sign:
+  needs:
+    - build
+  rules:
+    - if: $CI_COMMIT_TAG != null
+  stage: push
+  variables:
+    PIPELINE_FULL_IMAGE_NAME: $CI_REGISTRY_IMAGE
+    PIPELINE_NAMESPACE_SUFFIX: common-lint
+    PIPELINE_TAGS: latest ${CI_COMMIT_TAG}
+  trigger:
+    project: opentalk/opentalk-devops/push-and-sign-images-for-the-opentalk-tools-namespace
+    strategy: depend
+    forward:
+      pipeline_variables: true
