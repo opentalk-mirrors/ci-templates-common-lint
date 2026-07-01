@@ -15,7 +15,7 @@ The image is based on `alpine` and ships with the following tools:
 
 - [`shellcheck`](https://www.shellcheck.net/) — shell script linter
 - [`yamllint`](https://yamllint.readthedocs.io/) — YAML linter
-- [`taplo`](https://taplo.tamasfe.dev/) — TOML formatter/linter
+- [`tombi`](https://tombi-toml.github.io/tombi/) — TOML formatter/linter
 - [`markdownlint-cli2`](https://github.com/DavidAnson/markdownlint-cli2) —
   Markdown linter
 - [`reuse`](https://reuse.software/) — license/copyright compliance checker
@@ -43,7 +43,7 @@ merge request pipelines:
 |------------------|--------------------------------------------------------------------------|
 | `lint:shellcheck`| `git ls-files "*.sh" -z \| xargs -0r shellcheck`                         |
 | `lint:yaml`      | `yamllint .`                                                             |
-| `lint:toml`      | `taplo fmt --check`                                                      |
+| `lint:toml`      | `tombi format --check`                                                   |
 | `lint:markdown`  | `npx markdownlint-cli2 --warnings "**/*.md"`                             |
 | `lint:licensing` | `reuse lint`                                                             |
 | `lint:commit`    | `npx commitlint --from $CI_MERGE_REQUEST_DIFF_BASE_SHA --to HEAD ...`    |
