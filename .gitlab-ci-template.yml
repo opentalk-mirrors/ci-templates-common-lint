@@ -20,6 +20,16 @@ lint:yaml:
 
 lint:toml:
   <<: *default_common_job_template
+  rules:
+    exists:
+      - .tombi.toml
+  script: tombi format --check
+
+lint:toml-legacy:
+  <<: *default_common_job_template
+  rules:
+    exists:
+      - .taplo.toml
   script: taplo fmt --check
 
 lint:markdown:
