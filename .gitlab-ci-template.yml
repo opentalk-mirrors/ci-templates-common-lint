@@ -5,7 +5,7 @@
 .default_common_job_template: &default_common_job_template
   stage: lint
   image:
-    name: registry.heinlein.group/opentalk-tools/common-lint:v0.1.0
+    name: registry.heinlein.group/opentalk-tools/common-lint:v0.1.1
     pull_policy: if-not-present
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
