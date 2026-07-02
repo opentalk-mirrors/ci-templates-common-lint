@@ -21,14 +21,14 @@ lint:yaml:
 lint:toml:
   <<: *default_common_job_template
   rules:
-    exists:
+    - exists:
       - .tombi.toml
   script: tombi format --check
 
 lint:toml-legacy:
   <<: *default_common_job_template
   rules:
-    exists:
+    - exists:
       - .taplo.toml
   script: taplo fmt --check
 
