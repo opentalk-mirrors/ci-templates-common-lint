@@ -45,5 +45,8 @@ lint:licensing:
 
 lint:commit:
   <<: *default_common_job_template
+  variables:
+    # By default only 20 commits are fetched. For large MRs this would fail.
+    GIT_DEPTH: 0
   script:
     - npx commitlint --from $CI_MERGE_REQUEST_DIFF_BASE_SHA --to HEAD --verbose
